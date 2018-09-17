@@ -1,0 +1,24 @@
+DECLARE a : ARRAY[1..100]
+a[0] <- 5
+a[1] <- 3
+a[2] <- 2
+a[3] <- 1
+
+DECLARE i AS INT
+DECLARE j AS INT
+DECLARE temp AS INT
+FOR i <- 0 TO 4
+    FOR j <- 0 TO i
+        IF a[i] < a[j]
+          THEN
+            temp <- a[i]
+            a[i] <- a[j]
+            a[j] <- temp
+        ENDIF
+    ENDFOR
+ENDFOR
+
+OUTPUT a[0]
+OUTPUT a[1]
+OUTPUT a[2]
+OUTPUT a[3]

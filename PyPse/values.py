@@ -7,10 +7,20 @@ class ValueType(Enum):
     REAL = auto()
     STRING = auto()
     ARRAY = auto()
-    TYPE = auto()
     ENUM = auto()
     NONE = auto()
+    FUNCTION_DEFINITION = auto()
 
+def get_ValueType_by_name(valuetype_str: str) -> ValueType:
+    valuetype_str = valuetype_str.strip()
+    if valuetype_str == "REAL":
+        return ValueType.REAL
+    if valuetype_str == "STRING":
+        return ValueType.STRING
+    if valuetype_str == "INT":
+        return ValueType.INT
+    if "ARRAY" in valuetype_str:
+        return ValueType.ARRAY
 
 class Value():
     def __init__(self, value_type: ValueType):

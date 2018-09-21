@@ -6,7 +6,7 @@ class CodeLine():
 
     def get_word_by_index(self, index: int) -> str:
         return self.content.split(" ")[index]
-    
+
     def if_include(self, exp: str) -> bool:
         if exp in self.content:
             return True
@@ -14,11 +14,11 @@ class CodeLine():
 
     def str_between(self, left_exp: str, right_exp: str) -> str:
         content = self.content
-        return content[content.index(left_exp)+1: content.index(right_exp)]
+        return content[content.index(left_exp)+len(left_exp): content.index(right_exp)]
 
     def split(self, exp: str) -> list:
         return self.content.split(exp)
-    
+
     def __repr__(self):
         return f"{self.line_num}: {self.content}"
 

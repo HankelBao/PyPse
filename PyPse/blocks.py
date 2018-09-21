@@ -1,6 +1,6 @@
 from .block import Block, register_block
 from .precompiler import CodeLine
-from .symbols import Symbol, SymbolType
+from .symbols import Symbol, SymbolType, create_symbol_variable
 from .values import ValueType
 from .operations import OperationTypeAssign, OperationTypeLargerThan, OperationTypeSmallerThan, OperationTypeAddByOne
 from .keys import Key
@@ -20,7 +20,9 @@ class ProgramBlock(Block):
         for child_block in self.data['children_blocks']:
             child_block.run()
 
-
+"""
+DECLARE Variable_Name : Variable_Type[Subs] OF ...
+"""
 class DeclareBlock(Block):
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
@@ -30,40 +32,19 @@ class DeclareBlock(Block):
             return False, True
 
     def compile(self, code_lines: list):
-        def get_ValueType_by_name(valuetype_str: str) -> ValueType:
-            valuetype_str = valuetype_str.strip()
-            if valuetype_str == "REAL":
-                return ValueType.REAL
-            if valuetype_str == "STRING":
-                return ValueType.STRING
-            if valuetype_str == "INT":
-                return ValueType.INT
-            if "ARRAY" in valuetype_str:
-                return ValueType.ARRAY
-
         code_line = code_lines[0]
-        symbol_name_str = code_line.get_word_by_index(1)
-        value_type_str = code_line.get_word_by_index(3)
-        symbol_type = SymbolType.VARIABLE
-        value_type = get_ValueType_by_name(value_type_str)
-        if value_type == ValueType.ARRAY:
-            array_range_exp = code_line.str_between('[', ']')
-            range_left_exp_str, range_right_exp_str = array_range_exp.split("..")
-            array_range_left_value = Expression(range_left_exp_str, self.parent).get_value()
-            array_range_right_value = Expression(range_right_exp_str, self.parent).get_value()
-
-        symbol = Symbol(symbol_name_str, symbol_type)
-
-        symbol.init_value(value_type)
-        if value_type == ValueType.ARRAY:
-            symbol.symbol_value.init_array(ValueType.INT, array_range_left_value.value_in_python, array_range_right_value.value_in_python)
-
+        symbol_name_str = code_line.str_between("DECLARE", ":").strip(" ")
+        value_type_str = code_line.content[code_line.content.index(":")+1:].strip(" ")
+        symbol = create_symbol_variable(symbol_name_str, value_type_str)
         self.parent.symbols.add(symbol)
 
     def run(self):
         pass
 
 
+"""
+Variable_Key <- Expression
+"""
 class AssignBlock(Block):
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
@@ -95,7 +76,6 @@ class OutputBlock(Block):
         _, exp = code_line.split("OUTPUT")
         self.data['expression'] = Expression(exp, self.parent)
 
-
     def run(self):
         value = self.data['expression'].get_value()
         print(str(value.value_in_python))
@@ -119,6 +99,14 @@ class InputBlock(Block):
         key.get_symbol().symbol_value.assign_value_in_python(value_in_python)
 
 
+"""
+IF ExpressionInBoolType
+  THEN
+    BLOCKS
+ELSE
+    BLOCKS
+ENDIF
+"""
 class BranchesBlock(Block):
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
@@ -135,7 +123,7 @@ class BranchesBlock(Block):
                 self.branch_blocks = branch_blocks
 
             def check_condition(self):
-                if self.condition_exp.get_value().value_in_python == True:
+                if self.condition_exp.get_value().value_in_python is True:
                     return True
                 return False
 
@@ -153,6 +141,8 @@ class BranchesBlock(Block):
 
             return branch_condition_exp
 
+        # Depreciated because according to the doc
+        # ElseIf branch doesn't exist at all.
         def create_else_if_branch_condition_exp_by_code_line(code_line: CodeLine) -> Expression:
             _, branch_condition_exp_str = code_line.split("ELSE IF")
             branch_condition_exp = Expression(branch_condition_exp_str, self.parent)
@@ -171,11 +161,6 @@ class BranchesBlock(Block):
         for index, code_line in enumerate(code_lines):
             if index == 0 or index == 1:
                 continue
-            if code_line.if_include("ELSE IF"):
-                add_branch(branch_condition_exp, branch_code_lines)
-                branch_code_lines = []
-                branch_condition_exp = create_else_if_branch_condition_exp_by_code_line(code_line)
-                continue
             if code_line.if_include("ELSE"):
                 add_branch(branch_condition_exp, branch_code_lines)
                 branch_code_lines = []
@@ -189,11 +174,16 @@ class BranchesBlock(Block):
 
     def run(self):
         for branch in self.data['branches']:
-            if branch.check_condition() == True:
+            if branch.check_condition() is True:
                 for block in branch.branch_blocks:
                     block.run()
 
 
+"""
+FOR *Variable_Key* <- *StartIndex* TO *EndIndex*
+    *Blocks*
+ENDFOR
+"""
 class ForBlock(Block):
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
@@ -227,6 +217,11 @@ class ForBlock(Block):
             OperationTypeAddByOne.operate(loop_value)
 
 
+"""
+While *ExpressionOfBoolType* DO
+    *Blocks*
+ENDWHILE
+"""
 class WhileBlock(Block):
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
@@ -238,17 +233,161 @@ class WhileBlock(Block):
 
     def compile(self, code_lines: list):
         condition_line = code_lines[0]
-        _, condition_exp_str = condition_line.split("WHILE")
+        print(condition_line)
+        condition_exp_str = condition_line.str_between("WHILE", "DO")
+        print(condition_exp_str)
         self.condition_exp = Expression(condition_exp_str, self.parent)
         self.loop_blocks = self.compile_rest(code_lines[1:-1])
 
     def run(self):
-        while self.condition_exp.get_value().value_in_python == True:
+        while self.condition_exp.get_value().value_in_python is True:
             for block in self.loop_blocks:
                 block.run()
 
 
+"""
+REPEAT
+    *Blocks*
+UNTIL *ExpressionOfBoolType*
+"""
+class RepeatUntilBlock(Block):
+    @staticmethod
+    def match(code_line: CodeLine) -> (bool, bool):
+        if code_line.if_include("UNTIL"):
+            return True, True
+        if code_line.if_include("REPEAT"):
+            return True, False
+        return False, True
+
+    def compile(self, code_lines: list):
+        condition_line = code_lines[len(code_lines)-1]
+        _, condition_exp_str = condition_line.split("UNTIL")
+        self.finish_condition_exp = Expression(condition_exp_str, self.parent)
+        self.loop_blocks = self.compile_rest(code_lines[1:-1])
+
+    def run(self):
+        def run_loop_once():
+            for block in self.loop_blocks:
+                block.run()
+        while True:
+            run_loop_once()
+            if self.finish_condition_exp.get_value().value_in_python is True:
+                break
+
+
+"""
+CASE OF *Variable*
+    *Expression*:
+        *Blocks*
+    OTHERWISE
+        *Blocks*
+ENDCASE
+"""
+class CaseBlock(Block):
+    @staticmethod
+    def match(code_line: CodeLine) -> (bool, bool):
+        if code_line.if_include("ENDCASE"):
+            return True, True
+        if code_line.if_include("CASE OF"):
+            return True, False
+        return False, True
+
+    def compile(self, code_lines: list):
+        class Case():
+            def __init__(self, case_exp: Expression, case_blocks: list):
+                self.case_exp = case_exp
+                self.case_blocks = case_blocks
+
+            def check_and_run(self, case_target_exp: Expression) -> bool:
+                if not self.case_exp:
+                    for block in self.case_blocks:
+                        block.run()
+                    return True
+                if self.case_exp.get_value().value_in_python == case_target_exp.get_value().value_in_python:
+                    for block in self.case_blocks:
+                        block.run()
+                    return True
+                return False
+
+        case_target_exp_line = code_lines[0]
+        _, case_target_exp_str = case_target_exp_line.split("CASE OF")
+        case_target_exp = Expression(case_target_exp_str, self.parent)
+
+        cases = []
+        case_code_lines = []
+        current_case_exp = None
+
+        def add_case():
+            if len(case_code_lines) > 0:
+                case_blocks = self.compile_rest(case_code_lines)
+                case = Case(current_case_exp, case_blocks)
+                cases.append(case)
+                return True
+            return False
+
+        for code_line in code_lines[1: -1]:
+            code_line_content = code_line.content
+            if code_line_content[-1] == ":":
+                if add_case():
+                    case_code_lines = []
+                current_case_exp_str = code_line_content[:-1]
+                current_case_exp = Expression(current_case_exp_str, self.parent)
+                continue
+            if code_line.if_include("OTHERWISE"):
+                if add_case():
+                    case_code_lines = []
+                current_case_exp = None
+                continue
+            case_code_lines.append(code_line)
+        if add_case():
+            case_code_lines = []
+
+        self.cases = cases
+        self.case_target_exp = case_target_exp
+
+    def run(self):
+        for case in self.cases:
+            if case.check_and_run(self.case_target_exp):
+                break
+
+
+class DefineFunctionBlock(Block):
+    """
+    FUNCTION *FunctionName*(*Param1Name : *Param1TypeName)
+        *Block*
+    ENDFUNCTION
+    """
+    @staticmethod
+    def match(code_line: CodeLine) -> (bool, bool):
+        if code_line.if_include("ENDFUNCTION"):
+            return True, True
+        if code_line.if_include("FUNCTION"):
+            return True, False
+        return False, True
+
+    def compile(self, code_lines: list):
+        function_name = code_lines[0].str_between("FUNCTION", "(").split(" ")
+        params_str = code_lines[0].str_between("(", ")")
+        function_code_lines = code_lines[1: -1]
+
+        params_strs = params_str.split(",")
+        for param_str in params_strs:
+            variable_name, value_type_str = param_str.split(":")
+            symbol = create_symbol_variable(variable_name, value_type_str)
+            self.symbols.add(symbol)
+        symbol = Symbol(function_name, SymbolType.FUNCTION)
+        symbol.init_value(ValueType.FUNCTION_DEFINITION)
+        symbol.symbol_value.assign_value_in_python(self)
+        self.parent.symbols.add(symbol)
+
+    def run(self):
+        pass
+
+
 class EmptyLineBlock(Block):
+    """
+
+    """
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
         if code_line.content == "":
@@ -256,6 +395,9 @@ class EmptyLineBlock(Block):
         return False, True
 
 
+"""
+*Variable* = *Expression*
+"""
 class UnknownBlock(Block):
     @staticmethod
     def match(code_line: CodeLine) -> (bool, bool):
@@ -276,5 +418,7 @@ register_block(OutputBlock)
 register_block(InputBlock)
 register_block(BranchesBlock)
 register_block(WhileBlock)
+register_block(RepeatUntilBlock)
+register_block(CaseBlock)
 register_block(EmptyLineBlock)
 register_block(UnknownBlock)

@@ -1,5 +1,6 @@
 from enum import Enum, auto
-from .values import Value, ValueType
+from .values import Value, ValueType, get_ValueType_by_name
+from .precompiler import CodeLine
 
 
 class SymbolType(Enum):
@@ -35,6 +36,22 @@ class Symbol():
                 return symbol
             return self
         return False
+
+
+def create_symbol_variable(symbol_name_str: str, value_type_str: str) -> Symbol:
+    symbol_type = SymbolType.VARIABLE
+    value_type = get_ValueType_by_name(value_type_str)
+    symbol = Symbol(symbol_name_str, symbol_type)
+    symbol.init_value(value_type)
+
+    if value_type == ValueType.ARRAY:
+        array_range_exp = CodeLine("", 0, value_type_str).str_between('[', ']')
+        range_left_exp_str, range_right_exp_str = array_range_exp.split("..")
+        array_range_left_value = Expression(range_left_exp_str, None).get_value()
+        array_range_right_value = Expression(range_right_exp_str, None).get_value()
+        symbol.symbol_value.init_array(ValueType.INT, array_range_left_value.value_in_python, array_range_right_value.value_in_python)
+
+    return symbol
 
 
 class Symbols():

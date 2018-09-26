@@ -16,11 +16,16 @@ class CodeLine():
         content = self.content
         return content[content.index(left_exp)+len(left_exp): content.index(right_exp)]
 
+    def str_after(self, divider: str) -> str:
+        content = self.content
+        return content[content.index(divider)+len(divider):]
+
     def split(self, exp: str) -> list:
         return self.content.split(exp)
 
     def __repr__(self):
         return f"{self.line_num}: {self.content}"
+
 
 def precompile_file(f) -> list:
     file_name = f.name

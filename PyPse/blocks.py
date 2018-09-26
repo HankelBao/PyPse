@@ -1,7 +1,7 @@
 from .block import Block, register_block
 from .precompiler import CodeLine
 from .symbols import Symbol, SymbolType, create_symbol_variable
-from .values import ValueType
+from .values import Value, ValueType, get_ValueType_by_name
 from .operations import OperationTypeAssign, OperationTypeLargerThan, OperationTypeSmallerThan, OperationTypeAddByOne
 from .keys import Key
 from .expressions import Expression
@@ -366,22 +366,58 @@ class DefineFunctionBlock(Block):
         return False, True
 
     def compile(self, code_lines: list):
-        function_name = code_lines[0].str_between("FUNCTION", "(").split(" ")
-        params_str = code_lines[0].str_between("(", ")")
+        first_line = code_lines[0]
+        function_name = first_line.str_between("FUNCTION", "(").strip(" ")
+        params_str = first_line.str_between("(", ")")
         function_code_lines = code_lines[1: -1]
+        self.blocks = self.compile_rest(function_code_lines)
 
+        self.param_symbols = []
         params_strs = params_str.split(",")
         for param_str in params_strs:
             variable_name, value_type_str = param_str.split(":")
+            variable_name = variable_name.strip(" ")
             symbol = create_symbol_variable(variable_name, value_type_str)
             self.symbols.add(symbol)
+            self.param_symbols.append(symbol)
         symbol = Symbol(function_name, SymbolType.FUNCTION)
         symbol.init_value(ValueType.FUNCTION_DEFINITION)
         symbol.symbol_value.assign_value_in_python(self)
         self.parent.symbols.add(symbol)
 
+        return_type_str = first_line.str_after("RETURNS")
+        return_type = get_ValueType_by_name(return_type_str)
+        self.return_value = Value(return_type)
+
     def run(self):
         pass
+
+    def call(self, param_values):
+        for index, param_symbol in enumerate(self.param_symbols):
+            param_symbol.symbol_value.assign_value(param_values[index])
+        for block in self.blocks:
+            block.run()
+        return self.return_value
+
+
+class ReturnBlock(Block):
+    """
+    RETURN *Expression*
+    """
+    @staticmethod
+    def match(code_line: CodeLine) -> (bool, bool):
+        if code_line.if_include("RETURN"):
+            return True, True
+        return False, True
+
+    def compile(self, code_lines: list):
+        code_line = code_lines[0]
+        _, return_exp_str = code_line.split("RETURN")
+        self.return_exp = Expression(return_exp_str, self.parent)
+
+    def run(self):
+        return_value = self.return_exp.get_value()
+        self.parent.return_value.assign_value(return_value)
 
 
 class EmptyLineBlock(Block):
@@ -420,5 +456,7 @@ register_block(BranchesBlock)
 register_block(WhileBlock)
 register_block(RepeatUntilBlock)
 register_block(CaseBlock)
+register_block(DefineFunctionBlock)
+register_block(ReturnBlock)
 register_block(EmptyLineBlock)
 register_block(UnknownBlock)

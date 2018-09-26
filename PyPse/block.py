@@ -21,6 +21,12 @@ class Block(object):
     def run(self):
         pass
 
+    def call(self, param_values):
+        """
+        Only useful in case of functions or procedures
+        """
+        pass
+
     """Function that blocks shouldn't implement"""
 
     def __init__(self, parent):

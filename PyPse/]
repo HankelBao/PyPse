@@ -127,12 +127,13 @@ class Expression():
                         exp_items[index] = value
                 elif "(" in exp_item and ")" in exp_item:
                     symbol_name = exp_item[:exp_item.index("(")]
+                    print(symbol_name)
                     function_symbol = self.block.symbols.get(SymbolType.FUNCTION, symbol_name)
 
                     param_strs = exp_item[exp_item.index("(")+1: exp_item.index(")")]
                     param_values = []
                     for param_str in param_strs.split(","):
-                        param_str = param_str.strip(" ")
+                        print(param_str)
                         value = Expression(param_str, self.block).get_value()
                         param_values.append(value)
                     function_block = copy.deepcopy(function_symbol.symbol_value.value_in_python)

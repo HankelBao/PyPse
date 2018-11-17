@@ -1,5 +1,5 @@
-from PyPse import pypse_compile
+from PyPse import pypse_run
 
 f = open("test.pse", "r")
-pypse_compile(f)
+pypse_run(f)
 print()  # For global breakpoints

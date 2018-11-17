@@ -1,5 +1,5 @@
-FUNCTION testf(a: INT, b: INT) RETURNS INT
-         RETURN a+b
+FUNCTION add(a:INT, b:INT) RETURNS INT
+	RETURN a+b
 ENDFUNCTION
 
-OUTPUT testf(2, 2)
+OUTPUT add(1, 2)

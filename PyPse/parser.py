@@ -52,7 +52,7 @@ pse_parser = Lark(r"""
     key: key_item child_key_item*
     ?child_key_item: "." key_item
     key_item: symbol  ("[" array_index "]")?
-    array_index: int
+    array_index: expression
 
     expression: item operation*
     operation: operator item

@@ -31,25 +31,15 @@ def convert_symbol_token_to_symbol_name(symbol_token):
     return str(symbol_token.children[0])
 
 
-def convert_key_token_to_key_items(key_token: Tree):
-    key_items = []
-    for key_item_token in key_token.children:
-        symbol_token = token_find_data(key_item_token, "symbol")
-        array_index_token = token_find_data(key_item_token, "array_index")
+def get_symbol_name_from_key_item(key_item: Tree) -> str:
+    symbol_token = token_find_data(key_item, "symbol")
+    symbol_name = convert_symbol_token_to_symbol_name(symbol_token)
+    return symbol_name
 
-        symbol_name = convert_symbol_token_to_symbol_name(symbol_token)
-        if array_index_token:
-            array_index = convert_token_to_value(
-                array_index_token).value_in_python
-        else:
-            array_index = None
 
-        key_item = {
-            "symbol_name": symbol_name,
-            "array_index": array_index,
-        }
-        key_items.append(key_item)
-    return key_items
+def get_array_index_exp_token_from_key_item(key_item: Tree):
+    array_index_exp_token = token_find_data(key_item, "array_index")
+    return array_index_exp_token
 
 
 def convert_token_to_valuetype(type_token) -> ValueType:

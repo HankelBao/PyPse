@@ -1,13 +1,6 @@
-TYPE type_a
-	DECLARE child_a : INT
-	DECLARE child_b : ARRAY[1..10] OF INT
-ENDTYPE
+DECLARE a : ARRAY[1..100] OF INT
+DECLARE input : INT
 
-TYPE type_b
-	DECLARE child_a : type_b
-	DECLARE child_b : ARRAY[1..2] OF type_a
-ENDTYPE
-
-DECLARE test_type : type_b
-test_type.child_b[1].child_b[8] <- 1
-OUTPUT test_type.child_b[1].child_b[8]
+INPUT input
+a[input] <- input
+OUTPUT a[input]

@@ -1,0 +1,274 @@
+/home/hankelbao/Projects/PyPseTest/PyPse/home/hankelbao/Projects/PyPseTest/PyPse/__init__.pyshell<module PyPse>recursive_debug_output_childblocks_with_attrProcedureBlockfor_start_exp_tokendeclare_blocktype blockblock_tokenFunctionBlock.runinput_value_in_pythonfunction_block_paramsfunction_name/home/hankelbao/Projects/PyPseTest/PyPse/blocks.pyroot blockassign blockoutput blockDecisionBlock.recursive_debug_outputcall blockInputBlock.recursive_debug_outputvariable_name_tokenfunction_return_type_tokenblocks_tokendecision_if_blocks_tokenReturnBlock.recursive_debug_outputanonymous blockoutput_blockForBlock.rundecision_condition_expression_tokencondition_exp_tokenDeclareBlockrepeat blockProcedureBlock.recursive_debug_outputDeclareBlock.runinput blockvaluetype_nameForBlock.recursive_debug_outputreturn_expassign_blockreturn_exp_tokenrecursive_search_parent_function_blockOutputBlock.recursive_debug_outputprocedure_nameWhileBlockAssignBlockAssignBlock.recursive_debug_outputWhileBlock.rundeclare blockRepeatBlockdecision blockfor blockvaluetype_symbolparam_tokensfunction_symbolTypeBlock.runFunctionBlock.callBlock.search_symbol_by_name_recursively<module PyPse.blocks>procedure_name_tokendefined symbolparentblockprocedure_blockreturn blockProcedureBlock.callfor_end_expkey_tokenfunction blockCallProcedureBlockDeclareBlock.recursive_debug_outputRootBlock.rundecision_else_branch_existDebugBlock.recursive_debug_outputstart_indexDecisionBlock.runexecuted branchReturnBlock.runinput_blockCallProcedureBlock.runprocedure_symbolFunctionBlock.recursive_debug_outputdebug_blockDebugBlock.runInputBlock.runprocedure blockdecision_if_branch_tokendecision_else_branch_tokendecision_else_blocks_tokendecision_blockend_indexBlock.recursive_debug_output_childblocks_with_attrRepeatBlock.runfor_blockrun_childblocksRootBlock.recursive_debug_outputcall_procedure_blockMatchedBlockwhile_blockwhile blockrepeat_blockTypeBlock.recursive_debug_outputWhileBlock.recursive_debug_outputReturnBlock.run.<locals>.recursive_search_parent_function_blockAssignBlock.runprocedure_keyparam_symbolstype_blockBlock.__init__return_blockfor_end_exp_tokenRepeatBlock.recursive_debug_outputCallProcedureBlock.recursive_debug_outputBlock.run_childblocksOutputBlock.runTokens:Program Output:Structures:/home/hankelbao/Projects/PyPseTest/PyPse/compiler.py<module PyPse.compiler>type_array/home/hankelbao/Projects/PyPseTest/PyPse/converters.pystring<module PyPse.converters>child_tokentype_array_start_indexoperator_addarray_start_index_tokenparams_tokenvalue_tokenvaluetype_strrealtype_booloperator_divideoperator_tokentype_stringget_valuetype_from_value_tokenarray_end_index_tokentype_realoperator_largerthanoperator_multipleoperator_equalvalue_strarray_indextype_array_tokentype_intoperator_minusoperator_smallerthantype_array_end_indextype_custom/home/hankelbao/Projects/PyPseTest/PyPse/debug.pyDebug.get_root_blockDebug.register_root_blockDebugOutput.increase_depthDebugOutput.output_block_attr<module PyPse.debug>_DebugOutput__print_spacescontent[@DebugOutput.output_block_titleDebugOutputDepthDebugOutput.decrease_depthDebugOutput.__print_spaces]scope_blockfunction_keyhighest_prioritytarget_indexremain_indexPyPse.expressionsoperationscalculate_required<module PyPse.expressions>Operation.debug_outputItem.set_valueItem.get_valueoperation:/home/hankelbao/Projects/PyPseTest/PyPse/expressions.pyoperator_strExpression.__init__operation_tokenKEYresult_valuefunction_callItemTypeitem_typeExpression.get_valuehead_operationItem.debug_outputVALUEOperation.__init__Expression.convert_token_to_structureindex_of_highest_operationExpression.calculate_onceEXPRESSIONoperator_item_tokenCALCULATEDExpression.debug_outputkey_itemsKey.set_valuePyPse.keysarray_index_exp<module PyPse.keys>key_valueKey.get_valueKey.__init___Key__search_recursivelyKey.__search_recursivelyKey.debug_outputKey.set_value_in_python/home/hankelbao/Projects/PyPseTest/PyPse/keys.pyOperator.operateOperatorLargerThan.debug_outputanonymous operatorOperatorMinus.operate=PyPse.operators/home/hankelbao/Projects/PyPseTest/PyPse/operators.pyOperatorEqual.debug_outputOperatorMultiple.debug_outputOperatorAdd.operateOperatorMinus.debug_outputOperatorSmallerThan.debug_outputOperatorDivide.operateOperatorLargerThan.operateOperatorEqual.operate<module PyPse.operators>OperatorAdd.debug_outputOperator.debug_outputOperatorDivide.debug_outputOperatorSmallerThan.operateOperatorMultiple.operatefile_text/home/hankelbao/Projects/PyPseTest/PyPse/parser.py<module PyPse.parser>
+    blocks: block+
+    ?block: debug_block
+        | declare_block
+        | type_block
+        | assign_block
+        | decision_block
+        | output_block
+        | input_block
+        | repeat_block
+        | while_block
+        | for_block
+        | procedure_block
+        | call_procedure_block
+        | function_block
+        | return_block
+
+    debug_block: "DEBUG"
+
+    declare_block: "DECLARE" symbol ":" type
+    type_block: "TYPE" symbol blocks "ENDTYPE"
+    assign_block: key "<-" expression
+
+    output_block: "OUTPUT" expression
+    input_block: "INPUT" key
+
+    decision_block: decision_if_branch decision_else_branch? decision_endif
+    decision_if_branch: "IF" expression "THEN" blocks
+    decision_else_branch: "ELSE" blocks
+    decision_endif: "ENDIF"
+
+    repeat_block: "REPEAT" blocks "UNTIL" expression
+    while_block: "WHILE" expression "DO" blocks "ENDWHILE"
+
+    for_block: "FOR" key "<-" for_start_exp "TO" for_end_exp blocks "ENDFOR"
+    for_start_exp: expression
+    for_end_exp: expression
+
+    function_block: "FUNCTION" symbol "(" function_block_params ")" "RETURNS" type blocks "ENDFUNCTION"
+    procedure_block: "PROCEDURE" symbol "(" function_block_params ")" blocks "ENDPROCEDURE"
+    function_block_params: function_block_param ("," function_block_param)*
+    function_block_param: symbol ":" type
+
+    return_block: "RETURN" expression
+
+    call_procedure_block: "CALL" key "(" function_params ")"
+    function_call: key "(" function_params ")"
+    function_params: expression ("," expression)*
+
+    key: key_item child_key_item*
+    ?child_key_item: "." key_item
+    key_item: symbol  ("[" array_index "]")?
+    array_index: expression
+
+    expression: item operation*
+    operation: operator item
+    ?item: value | key | function_call | branched_expression
+    ?branched_expression: "(" expression ")"
+
+    ?operator: operator_add
+        | operator_minus
+        | operator_multiple
+        | operator_divide
+        | operator_equal
+        | operator_largerthan
+        | operator_largerorequalto
+        | operator_smallerthan
+        | operator_smallerorequalto
+        operator_add: "+"
+        operator_minus: "-"
+        operator_multiple: "*"
+        operator_divide: "/"
+        operator_equal: "="
+        operator_largerthan: ">"
+        operator_largerorequalto: ">="
+        operator_smallerthan: "<"
+        operator_smallerorequalto: "<="
+
+    symbol : CNAME
+
+    value: int
+        | real
+        | string
+    type: type_int
+        | type_real
+        | type_string
+        | type_bool
+        | type_array
+        | type_custom
+    type_int: "INT"
+    type_real: "REAL"
+    type_string: "STRING"
+    type_bool: "BOOL"
+    type_array: "ARRAY" "[" type_array_start_index ".." type_array_end_index "]" "OF" type
+        type_array_start_index: int
+        type_array_end_index: int
+    type_custom: symbol
+
+    string: ESCAPED_STRING
+    int: [SIGNED_INT | INT]
+    real: [SIGNED_FLOAT | FLOAT]
+    bool: "TRUE" -> true
+        | "FALSE" -> false
+
+    %import common.CNAME
+    %import common.ESCAPED_STRING
+    %import common.INT
+    %import common.SIGNED_INT
+    %import common.FLOAT
+    %import common.SIGNED_FLOAT
+    %import common.NEWLINE
+    %import common.WS
+    %ignore WS
+    pse_parserPyPse 0.1.x (beta) - Pseudocode Compiler in PythonrealpathPyPse: no input filePyPse.shell/home/hankelbao/Projects/PyPseTest/PyPse/shell.pyfile_namegetcwd--<module PyPse.shell>option_strfile_pathargvOptionTypeexitSymbols.__init__<module PyPse.symbols>sumbolsSymbol.debug_outputSymbols.search_by_nameSymbols.debug_outputSymbols.appendsymbol_list/home/hankelbao/Projects/PyPseTest/PyPse/symbols.pysymbol name: Value.__init__, value: PyPse.valuesValue.__repr__output_content/home/hankelbao/Projects/PyPseTest/PyPse/values.pyValue.debug_output(type: Value.assign_value_in_python<module PyPse.values>/home/hankelbao/Projects/PyPseTest/pypse.py__annotations__<module>/home/hankelbao/.local/lib/python3.7/site-packages/lark<module lark>/home/hankelbao/.local/lib/python3.7/site-packages/lark/__init__.py__version__0.6.5<module lark.common>ParserConf.__init__/home/hankelbao/.local/lib/python3.7/site-packages/lark/common.pyLexerConf.__init__lark.exceptionsUnexpected token %r at line %s, column %s.
+Expected one of: 
+	* %s
+parse_fnexamplescandidatemalformedNot supported for this exceptionNo terminal defined for '%s' at line %d col %dspanposlex_posmessage^
+LarkError
+Expecting: %s
+/home/hankelbao/.local/lib/python3.7/site-packages/lark/exceptions.pyUnexpectedInput.get_contextUnexpectedCharacters.__init__allowed<module lark.exceptions>rsplitUnexpectedToken.__init__ Given a parser instance and a dictionary mapping some label with
+            some malformed syntax examples, it'll return the label for the
+            example that bests matches the current error.
+        considered_tokensUnexpectedInput.match_examplesTerminal.fullrepr<module lark.grammar>Rule(%r, %r, %r, %r)Symbol.__hash__RuleOptions.__init__Symbol.__repr__Symbol.__eq__RuleOptions(%r, %r, %r)Symbol.__ne__
+        origin : a symbol
+        expansion : a list of symbols
+    <%s : %s>RuleOptions.__repr__%s(%r)/home/hankelbao/.local/lib/python3.7/site-packages/lark/grammar.pyTerminal.__init__Profiler.make_wrapperCannot specify an embedded transformer when using the Earley algorithm.Please use your transformer on the resulting parse tree, or use a different algorithm (i.e. lalr)lark.larkcache_grammarprofileoutside_larkLark.lex_build_lexercache_filetotal_timeLarkOptions.__init__Feature temporarily disabledabsolute_importgrammar_filenameProfiler.__init___build_parserOPTIONS_DOCdisambig_parsersoptions_dictfloatrel_tobasepathlast_enter_time
+        parser - Decides which parser engine to use, "earley" or "lalr". (Default: "earley")
+                 Note: "lalr" requires a lexer
+
+        lexer - Decides whether or not to use a lexer stage
+            "standard": Use a standard lexer
+            "contextual": Stronger lexer (only works with parser="lalr")
+            "dynamic": Flexible and powerful (only with parser="earley")
+            "dynamic_complete": Same as dynamic, but tries *every* variation
+                                of tokenizing possible. (only with parser="earley")
+            "auto" (default): Choose for me based on grammar and parser
+
+        ambiguity - Decides how to handle ambiguity in the parse. Only relevant if parser="earley"
+            "resolve": The parser will automatically choose the simplest derivation
+                       (it chooses consistently: greedy for tokens, non-greedy for rules)
+            "explicit": The parser will return all derivations wrapped in "_ambig" tree nodes (i.e. a forest).
+
+        transformer - Applies the transformer to every parse tree
+        debug - Affects verbosity (default: False)
+        keep_all_tokens - Don't automagically remove "punctuation" tokens (default: False)
+        cache_grammar - Cache the Lark grammar (Default: False)
+        postlex - Lexer post-processing (Default: None) Only works with the standard and contextual lexers.
+        start - The start symbol (Default: start)
+        profile - Measure run-time usage in Lark. Read results from the profiler proprety (Default: False)
+        propagate_positions - Propagates [line, column, end_line, end_column] attributes into all tree branches.
+        lexer_callbacks - Dictionary of callbacks for the lexer. May alter tokens during lexing. Use with caution.
+    cur_timeLark(open(%r), parser=%r, lexer=%r, ...)<module lark.lark>endswith/home/hankelbao/.local/lib/python3.7/site-packages/lark/lark.pyparser_classLark._build_lexerCreate an instance of Lark with the grammar given by its filename
+
+        If rel_to is provided, the function will find the grammar filename in relation to it.
+
+        Example:
+
+            >>> Lark.open("grammar_file.lark", rel_to=__file__, parser="lalr")
+            Lark(...)
+
+        encodingUnknown options: %sLark.__repr__
+OPTIONS:Lark.parseLark._build_parserbasenamesourceutf8enter_sectionSpecifies the options for Lark
+
+    last_sectionProfiler.enter_sectionlarkcache_%sNot available yetProfiler.make_wrapper.<locals>.wrapperOnly %s supports disambiguation right nowOnly lex (and postlex) the text, without parsing it. Only relevant when lexer='standard'
+            grammar : a string or file-object containing the grammar spec (using Lark's ebnf syntax)
+            options : a dictionary controlling various aspects of Lark.
+        cur_sectionignore_tokensParse the given text, according to the options provided. Returns a tree, unless specified otherwise.Lark.__init___parse_tree_builderPatternRE.max_widthTraditionalLexer.__init__.<locals>.<genexpr>__reduce___get_flagsCannot compile token %s: %s_Lex.__init__match_whole[^TerminalDef.__init__Token.__deepcopy__(?%s)TraditionalLexer.lexPattern.__init__tokens_by_typeembedded_strs$Expressions that may indicate newlines in a regexp:
+        - newlines (
+)
+        - escaped newline (\n)
+        - anything but ([^...])
+        - any-char (.) when the flag (?s) exists
+    LineCounternewline_typesignore_typesline_ctrmretype_from_indexparser_statelexer_by_tokensToken.__reduce__TraditionalLexer.__init__.<locals>.<lambda>lastindexToken.__repr__ContextualLexer.set_parser_statePatternStr.min_widthgroupindexUnlessCallback.__call__borrow_tbuild_mres_build_mres.<locals>.<genexpr>postfixPattern.__hash__retokstrtokmax_sizeUnlessCallback.__init__ContextualLexer.__init__ContextualLexer.lexTerminalDef.__repr__PatternRE.min_widthtest_newline_Lex.lexToken.new_borrow_posPattern.__repr__Token.__new__lark.lexer_create_unless<module lark.lexer>LineCounter.feedBuilt to serve both Lexer and ContextualLexerPatternRE.to_regexpLineCounter.__init__newline_characcepts(?%s:%s)line_start_postokens_by_namestate_tokens_regexp_has_newlinePattern.to_regexp_create_unless.<locals>.<lambda>Lexer does not allow zero-width terminals. (%s: %s)Lexer interface
+
+    Method Signatures:
+        lex(self, stream) -> Iterator[Token]
+
+        set_parser_state(self, state)   # Optional
+    Token.__eq__Token(%s, %r)PatternStr.to_regexp/home/hankelbao/.local/lib/python3.7/site-packages/lark/lexer.py(?P<%s>%s)Consume a token and calculate the new line & column.
+
+        As an optional optimization, set test_newline=False is token doesn't contain a newline.
+        Pattern.__eq__sortchar_posroot_lexerPattern._get_flags{%d}_rfind.<locals>.<genexpr>literalxsGrammar.compilecanonize_treelark.load_grammartokenmodsencodeexpansionsRule %s is marked for expansion (it starts with an underscore) and isn't allowed to have aliases (alias=%s)Rule '%s' defined more than once_aliasParses and creates Grammar objectsimported_rulessymbols_from_strcaseCOMMENTGrammarLoader©'ÚselfÚgrammar_textÚgrammar_nameÚtreeÚeÚcontextÚerrorÚdefsÚ	term_defsÚ	rule_defsÚ
+statementsÚignoreÚstmtÚtÚ	path_nodeÚarg1Údotted_pathÚnamesÚaliasesÚgrammar_pathÚgÚ	base_fileÚ	base_pathÚaliases_dictÚnew_tdÚnew_rdÚnameÚ_Úignore_namesÚt2ÚitemÚterminal_namesÚrulesÚ
+rule_namesÚ_xÚ_oÚ
+expansionsÚused_symbolsÚsymchoicesûzstart[   z_listz_list[   z_itemz_list _itemz_item[   zruleztermz	statementz_NLzrule[   zRULE _COLON expansions _NLz&RULE _DOT NUMBER _COLON expansions _NLz
+expansions[   zaliaszexpansions _OR aliaszexpansions _NL _OR aliasz?alias[   zexpansion _TO RULEz	expansionz	expansion[   z
+_expansionz
+_expansion[   Ú z_expansion exprz?expr[   zatomzatom OPzatom TILDE NUMBERz"atom TILDE NUMBER _DOT _DOT NUMBERz?atom[   z_LPAR expansions _RPARzmaybezvaluezvalue[   zterminalznonterminalzliteralzrangezterminal[   zTERMINALznonterminal[   zRULEz?name[   zRULEzTERMINALzmaybe[   z_LBRA expansions _RBRAzrange[   zSTRING _DOT _DOT STRINGzterm[   zTERMINAL _COLON expansions _NLz*TERMINAL _DOT NUMBER _COLON expansions _NLz	statement[   zignorezimportzdeclarezignore[   z_IGNORE expansions _NLzdeclare[   z_DECLARE _declare_args _NLzimport[   z_IMPORT _import_path _NLz._IMPORT _import_path _LPAR name_list _RPAR _NLz%_IMPORT _import_path _TO TERMINAL _NLz_import_path[   z
+import_libz
+import_relz
+import_lib[   z_import_argsz
+import_rel[   z_DOT _import_argsz_import_args[   znamez_import_args _DOT namez	name_list[   z
+_name_listz
+_name_list[   znamez_name_list _COMMA namez_declare_args[   znamez_declare_args namezliteral[   zREGEXPzSTRING0[ \t]+Create a unique list of anonymous terminals. Attempt to give meaningful names to them when we add them_fix_escapingGrammarLoader.__init__[%s-%s]n2to_evalWhoops, name collisionflag_start_literal_to_patternGrammarLoader.load_grammarSame name defined twice?\|//[^\n]*RuleTreeToText.expansionnamespaceTerminalTreeToPattern.expansion.<locals>.<genexpr>Expecting a value at line %s column %s
+
+%sCanonizeTree.maybeEBNF_to_BNFPrepareSymbolsreplace\\get_namespace_name!Rule '%s' used but not defined (in rule %s)to_import(?:%s)%sTerminals %s were marked to ignore but were not defined!rule_options<module lark.load_grammar>/home/hankelbao/.local/lib/python3.7/site-packages/lark/load_grammar.pyterm_treeisalpha(\r?\n)+\s*\"imsluxlstripabspathAliasing not allowed in terminals (You used -> in the wrong place)\.CanonizeTree.tokenmodsGrammar.compile.<locals>.<genexpr>SimplifyRule_VisitorPrepareAnonTerminalsimported_termsEBNF_to_BNF.__init__PrepareAnonTerminals.patterntoken_dictNames starting with double-underscore are reserved (Error at %s)_literal_to_pattern.<locals>.<genexpr>upperûÚ.zDOTú,zCOMMAú:zCOLONú;z	SEMICOLONú+zPLUSú-zMINUSÚ*zSTARú/zSLASHú\z	BACKSLASHú|zVBARú?zQMARKú!zBANGú@zATú#zHASHú$zDOLLARú%zPERCENTú^z
+CIRCUMFLEXú&z	AMPERSANDÚ_z
+UNDERSCOREú<zLESSTHANú>zMORETHANú=zEQUALú"zDBLQUOTEú'zQUOTEú`z	BACKQUOTEú~zTILDEú(zLPARú)zRPARÚ{zLBRACEÚ}zRBRACEú[zLSQBú]zRSQBÚ
+zNEWLINEz
+zCRLFú	zTABú zSPACE0term_setterm_nametermdef_choice_of_rulesPrepareLiterals.range_imported_grammarsToken '%s' used but not defined (in rule %s)EXTLark doesn't support joining terminals with conflicting flags!alias_namePrepareGrammar%declarerule_dependencies_add_recurse_rulePrepareSymbols.valuenew_nameasciiTerminalTreeToPattern.expansionsSimplifyRule_Visitor.expansionsTerminals cannot be empty (%s)\[import_grammarprefiximport_from_grammar_into_namespace.<locals>.rule_dependencies_?[A-Z][_A-Z0-9]*\)TerminalTreeToPattern.alias_RE_FLAGSRuleTreeToText.aliasûzUnclosed parenthesis[   za: (
+zUmatched closing parenthesis[   za: )
+za: [)
+za: (]
+z5Expecting rule or terminal definition (missing colon)[   za
+za->
+zA->
+za A
+zAlias expects lowercase name[   z
+a: -> "a"
+zUnexpected colon[   za::
+za: b:
+za: B:
+za: "a":
+zMisplaced operator[   za: b??za: b(?)za:+
+za:?
+za:*
+za:|*
+z;Expecting option ("|") or a new rule or terminal definition[   za:a
+()
+z%import expects a name[   z%import "a"
+z%ignore expects a value[   z%ignore %import
+0TerminalTreeToPattern.expansions.<locals>.<genexpr>"(\\"|\\\\|[^"\n])*?"i?rules_by_exprIMPORT_PATHSUnexpected input at line %d column %d in %s: 
+
+%su'''%s'''mxEBNF_to_BNF.exprPrepareGrammar.terminaloptions_from_ruleexps<?>PrepareAnonTerminals.__init__GrammarLoader.load_grammar.<locals>.<lambda>modulesplusTerminal '%s' defined more than once\]SimplifyRule_Visitor._flatten%s at line %s column %s
+
+%s__%s_%s_%d__IGNORE_%d_TERMINAL_NAMESliteral_eval\'!?[_?]?[a-z][_a-z0-9]*Rules aren't allowed inside terminals (%s in %s)©ÚselfÚ	term_defsÚ	rule_defsÚtransformerÚnameÚ	term_treeÚpriorityÚ
+expansionsÚ	terminalsÚebnf_to_bnfÚrulesÚ	rule_treeÚoptionsÚtreeÚrule_tree_to_textÚsimplify_ruleÚcompiled_rulesÚ	expansionÚaliasÚrule\(__ANON_%dimport_from_grammar_into_namespace.<locals>.rule_dependencies.<locals>.<lambda>Conflicting flags for the same terminal: %sos.path{%d,%d}TerminalTreeToPattern.exprRULESbase_pathsimport_paths\d+TerminalTreeToPattern.pattern/(?!/)(\\/|\\\\|[^/\n])*?/[%s]*PrepareGrammar.nonterminalisalnumresolve_term_referencesTerminalTreeToPattern.valueimport_from_grammar_into_namespace.<locals>.get_namespace_nameRuleTreeToText.expansionsterm_reverseTERMINALS%s.%sGrammarLoader.load_grammar.<locals>.setcontraction.<locals>.<lambda>Bad Range for %s (%d..%d isn't allowed)PrepareLiterals.literalunftrSimplifyRule_Visitor.aliasParse grammar_text, verify, and create Grammar object. Display nice messages on error.[+*][?]?|[?](?![a-z])EBNF_to_BNF._add_recurse_ruleExpandSingleChild.__init__lark.parse_tree_builderPropagatePositions_should_expandend_posrule_buildersExpandSingleChild.__call__to_includenode_builderChildFilterptb_inline_argsmaybe_create_child_filter.<locals>.<genexpr>/home/hankelbao/.local/lib/python3.7/site-packages/lark/parse_tree_builder.pyuser_callback_namefilteredalways_keep_all_tokensexpand_single_childwrapper_chainChildFilterLALR.__call__ambiguousOptimized childfilter for LALR (assumes no duplication in parse tree, so it's safe to change it)ParseTreeBuilder.create_callbackinternal_callback_nameChildFilter.__call__Meta args not supported for internal transformerParseTreeBuilder._init_buildersPropagatePositions.__call__<module lark.parse_tree_builder>_cb%d_%sChildFilter.__init__ptb_inline_args.<locals>.fuser_aliasesRule '%s' already existsPropagatePositions.__init__ParseTreeBuilder.__init__Earley.matchWithLexerWithLexer.parseXEarley_CompleteLexUnknown parser: %stokenize_textThe Earley parser does not support the contextual parsertoken_streamspsxearleylark.parser_frontendslalr_parser_postprocessXEarley_CompleteLex.__init__CYK.parseCYK._apply_callbacklexer_clsCYK._transformcol_start_posinit_traditional_lexerget_ambiguity_resolver/home/hankelbao/.local/lib/python3.7/site-packages/lark/parser_frontends.pytoken_by_nameXEarley._prepare_matchXEarley.matchCHARresolve_ambigBad regexp in token %s: %sXEarley.__init__init_contextual_lexerLALR_CustomLexer.__init__WithLexer.init_traditional_lexerLALR_TraditionalLexer.__init__regexpsidxparsers.grammar_analysisThe LALR parser requires use of a lexerDynamic Earley doesn't allow zero-width regexpsXEarley.parseCYK parser requires using standard parser.LALR_ContextualLexer.__init__<module lark.parser_frontends>WithLexer.init_contextual_lexerWithLexer.lexUnknown lexer: %ssubtreesCYK.__init__/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/__init__.pylark.parsersCnfWrapper.__repr__weight<module lark.parsers.cyk>Grammar.__repr__itertoolsunit_ruleCYK doesn't support empty rulesRemoves 'rule' from 'g' without changing the langugage produced by 'g'.Splits a rule whose len(rhs) > 2 into shorter rules.r1_remove_unit_rule_binlark_rulent_unit_ruleApplies the BIN rule to 'g' (see top comment).__SP_target_ruleskipped_rulesUnitSkipRule.__eq__CnfWrapper.__init__.<locals>.<genexpr>tokenized%s -> %s__T_Returns a non-terminal unit rule from 'g', or None if there is none.rule_nodespan2r2rule_strRule.__ne__This module implements a CYK parser.CnfWrapper.__eq__tablespan1r1_treer2_treerule_total_weightnonterminal_rulesextendGrammar.__eq__orig_rulelhsRule.__str__.<locals>.<genexpr>RuleNodeParser wrapper.RuleNode.__repr__unroll_unit_skipruleConverts a RuleNode parse tree to a lark Tree.Parser._to_rule.<locals>.<genexpr>/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/cyk.pyrefsRuleNode.__init__Parses input, which is a list of tokens.Rule.__hash__indentApplies the TERM rule on 'g' (see top comment).Parsing failed.get_any_nt_unit_ruleConverts a lark rule, (lhs, rhs, callback, options), to a Rule.A rule that records NTs that were skipped during transformation.new_rhsxrangeRuleNode.__repr__.<locals>.<genexpr>productorig_rulesParser._to_treeRuleNode(%s, [%s])CNF wrapper for grammar.
+
+  Validates that the input grammar is CNF and provides helper data structures.
+  Grammar.__str__orig_rhsRule.__init__.<locals>.<genexpr>revert_cnfParser.parse.<locals>.<genexpr>Creates a CNF grammar from a general context-free grammar 'g'.Context-free grammar.__T_%s_split__SP_%sA node in the parse tree, which also contains the full rhs rule.UnitSkipRule.__init__build_unit_skipruleto_cnfGrammar.__str__.<locals>.<genexpr>Reverts a parse tree (RuleNode) to its original non-CNF form (Node).Parses sentence 's' using CNF grammar 'g'.Context-free grammar rule._term.<locals>.<genexpr>_split.<locals>.<genexpr>print_parseApplies the UNIT rule to 'g' (see top comment).predictednew_treeApplyCallbacks.__init__old_treeItem.__repr__item_keyis_emptyNewsListAn entry in the table, aka Earley Chart. Contains lists of items.Column.addItem.is_complete_Itemitem_countParser.parse.<locals>.scan.<locals>.<genexpr>completedDerivation.__init__ApplyCallbacks.drv__bool__Column.__init__An Earley Item, the atom of the algorithm.Column.__bool__/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/earley.pyIncomplete parse: Could not find a solution to inputDerivation.__hash__Item.__hash__Item.__eq__This module implements an Earley ParserNewsList.__init__Infinite recursion in grammar! (Rule %s)Derivation._pretty_labelSort items into scan/predict/reduce newslists
+
+        Makes sure only unique items are added.
+        NewsList.get_newsKeeps track of newly added items (append-only)lark.parsers.earley<(%d) %s : %s * %s><module lark.parsers.earley>__nonzero__Item.expectItem.advancelast_iter_firstRulePtr.nextRulePtr.advanceinit_ptrinit_ptrs<%s : %s * %s>Calculate FOLLOW sets.
+
+    Adapted from: http://lara.epfl.ch/w/cc09:algorithm_for_first_and_follow_sets_expand_rule$rootRulePtr.__eq__RulePtr.__repr__set1set2RulePtr.__init__GrammarAnalyzer.expand_ruleNULLABLEReturns all init_ptrs accessible by rule (recursive)RulePtr.is_satisfied/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/grammar_analysis.pyrules_by_originupdate_set<module lark.parsers.grammar_analysis>calculate_setsGrammarAnalyzer.__init__RulePtr.__hash__GrammarAnalyzer.expand_rule.<locals>._expand_ruleUsing an undefined rule: %sGrammarAnalyzer._firstGrammarAnalyzer.__init__.<locals>.<lambda>warnstate_to_idxstepThis module builds a LALR(1) transition-table for lalr_parser.py
+
+For now, shift/reduce conflicts are automatically resolved as shifts.
+IntParseTableReduceAction.__init__LALR_Analyzer.compute_lookahead.<locals>.stepAction.__str__int_statesfrom_ParseTable<module lark.parsers.lalr_analysis>end_statesunsatrpsCollision in %s: %sParseTable.__init__Shift/reduce conflict for %s: %s. Resolving as shift.Action.__repr__
+  * %s: %sIntParseTable.from_ParseTablelogging/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/lalr_analysis.pyLALR_Analyzer.compute_lookahead.<locals>.step.<locals>.<lambda>set_statestate_stackvalue_stackget_action_Parser.parse_Parser.parse.<locals>.reduceParser.__init__.<locals>.<genexpr>_Parser.parse.<locals>.get_actionLALR doesn't yet support prioritizationThis module implements a LALR(1) Parser
+_Parser.__init__<module lark.parsers.lalr_parser>/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/lalr_parser.pycmp_to_keyp2_compare_rulesrule2lark.parsers.resolve_ambigkey_f_antiscore_sum_resolve_ambigrule1/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/resolve_ambig.pyp1_standard_resolve_ambigtree1tree2<module lark.parsers.resolve_ambig>_sum_priority_compare_priority_compare_drv_antiscore_sum_drvtext_columndelayed_matchestext_lineexpected_tokensUnexpected end of input! Expecting a terminal of: %s<module lark.parsers.xearley>/home/hankelbao/.local/lib/python3.7/site-packages/lark/parsers/xearley.pyThis module implements an experimental Earley Parser with a dynamic lexerTree.copyCreates a colorful image that represents the tree (data+children, without meta)
+
+    Possible values for `rankdir` are "TB", "LR", "BT", "RL", corresponding to
+    directed graphs drawn from top to bottom, from left to right, from bottom to
+    top, and from right to left, respectively. See:
+    https://www.graphviz.org/doc/info/attrs.html#k:rankdir
+    graph_typefillcolor_metapydotfilledTree.expand_kids_by_indexlark.treeadd_edgeTree.__init__pydot__tree_to_png.<locals>._to_pydotTree.metaindicesTree.end_lineleafTree._prettyindent_strseenTree.iter_subtreesTree.__deepcopy__styleadd_nodeTree.find_dataFind all nodes where tree.data == dataTree.columnTree.prettyTree.find_data.<locals>.<lambda><module lark.tree>pydot__tree_to_png.<locals>.new_leafTree.end_columnTree.setfuture_builtinsExpand (inline) children at the given indicesTree.scan_valuessubnodeTree.lineTree.find_predDotTree.__hash__Find all nodes where pred(tree) == TrueTree.__eq__Tree(%s, %s)/home/hankelbao/.local/lib/python3.7/site-packages/lark/tree.pyTree.__repr__digraphwrite_pngTree.__ne__subnodesEdge#%xTree._pretty_label/home/hankelbao/.local/lib/python3.7/site-packages/lark/utils.pyFunctionTypefzset.__repr__sre_parse__func__excscontextlibCatch and dismiss the provided exception
+
+        >>> x = 'hello'
+        >>> with suppress(IndexError):
+        ...     x = x[10]
+        >>> x
+        'hello'
+        deque<module lark.utils>open_qnext_nodecontextmanagerfrozenset{%s}BuiltinFunctionTypebasestringtrue_elemsfalse_elemssre_constantsversion_infoMethodTypegetwidthpopleft__default___inline_args__func.<locals>.create_decorator.<locals>.fVisits the tree recursively, starting with the leaves and finally the root (bottom-up)
+
+    Calls its methods (provided by user via inheritance) according to tree.data
+    The returned value replaces the old one in the structure.
+
+    Can be used to implement map or reduce.
+    visit_childrenDefault operation on tree (for override)mrolibmembersVisitor functions can either accept tree, or meta, or be inlined. These cannot be combined.Transformer.__mul__with_selfInterpreter.__default__Transformer._call_userfuncInterpreter.visitNon-recursive. Changes the tree in-place instead of returning new instancesTransformer.transform_apply_decoratorVisitorBaseTransformer_InPlace._transform_treevisit_children_decor.<locals>.innerDoesn't work with the base Transformer class__getattr___transform_childrenstaticVisitor.visittransformersTransformerChain_visitor_args_decTransformer._transform_treeVisitorBase.__default__new_childrenTransformerChain.__init___visitor_args_func_dec.<locals>.create_decorator.<locals>.flark.visitorsRecursive. Changes the tree in-place instead of returning new instancesVisitorBase._call_userfuncSee InterpretergetmembersgetmroTransformer._apply_decorator/home/hankelbao/.local/lib/python3.7/site-packages/lark/visitors.pyA convenience decorator factory, for modifying the behavior of user-supplied visitor methodsInterpreter.__getattr__Bottom-up visitor, recursive
+
+    Visits the tree, starting with the leaves and finally the root (bottom-up)
+    Calls its methods (provided by user via inheritance) according to tree.data
+    <module lark.visitors>Transformer._transform_childrenTransformer.__default__Transformer_InPlace.transformInterpreter.visit_childrenVisitor_Recursive.visitTransformerChain.transformTransformer_InPlaceRecursive._transform_treewhole_treeBottom-up visitor, non-recursive
+
+    Visits the tree, starting with the leaves and finally the root (bottom-up)
+    Calls its methods (provided by user via inheritance) according to tree.data
+    v_args.<locals>._visitor_args_decTop-down visitor, recursive
+
+    Visits the tree, starting with the root and finally the leaves (top-down)
+    Calls its methods (provided by user via inheritance) according to tree.data
+
+    Unlike Transformer and Visitor, the Interpreter doesn't automatically visit its sub-branches.
+    The user has to explicitly call visit_children, or use the @visit_children_decor
+    InlineTransformer._call_userfuncTransformerChain.__mul__bfsseqsyszipEnumPy36enummemosendFIRSTafterbyteslevelthrowtuplewraps<string>beforekwargslaunchrindexsortedvalue1value2Discard__all____cmp____doc__changedcolumn0dirnameexpand1globalsinitialinspectis_termisupperpartialto_scanvisited<listcomp>LexError__dict____exit____iter____main____name____path____spec__callableclassifyfromlistnext_setpropertyreversed<metaclass>ANONYMOUSValueType__class____debug____enter____slots__bytearrayenumeratefunctoolsnew_itemsnew_rulesnew_stateparam_exppypse_runsolutionsto_expandto_reduceParseError__cached____import____loader____module__filter_outissubclasslexer_confparam_expsparam_itemparam_nameparam_typestartswithto_predicttoken_treetree_classvalue_typeCUSTOM_TYPENonTerminalSTRING_TYPESlottedTree__getitem____package____prepare__classmethodcollectionsdefaultdictparam_itemsparse_tableparser_confpredict_allpredictionsstart_statesymbol_nameGrammarError__builtins____internal____qualname___parse_tablecomplete_lexget_frontendreturn_valuestart_symbolstaticmethodsymbol_tokenterm_matcher__metaclass___initializingalways_acceptclassify_boolcurrent_blockpos_in_stream<setcontraction>NotImplemented__orig_bases__user_callbacks<dictcontraction>__mro_entries__smart_decoratortoken_find_datavaluetype_tokenconsidered_rulesget_regexp_width__class_getitem__resolve_ambiguityearley__predict_allfunction_name_tokenparse_file_to_tokenpredict_and_completearray_index_exp_tokenfunction_params_tokenconvert_token_to_valueresolve__antiscore_sumconvert_token_to_operatorget_array_info_from_tokenconvert_token_to_valuetypeget_symbol_name_from_key_itemGrammar.__init__Parser.parse.<locals>.predict/usr/bin/pythonParser.parse.<locals>.complete%s.__prepare__() must return a mapping, not %s%s argument after ** must be a mapping, not %s$ENDRule.__repr__Infinite recursion detected! (rule %s)%s argument after * must be an iterable, not %s.0Symbol.__init__Parser.parse.<locals>.predict_and_complete%s(%r, %r)Item.__init__%s got multiple values for keyword argument '%s'convert_param_tokens_to_param_itemsconvert_symbol_token_to_symbol_nameget_custom_type_name_from_type_tokenget_array_index_exp_token_from_key_item

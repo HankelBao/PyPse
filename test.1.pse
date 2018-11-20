@@ -1,13 +1,13 @@
-DECLARE a : ARRAY[1..100]
+DECLARE a : ARRAY[0..100] OF INT
 a[0] <- 5
 a[1] <- 3
 a[2] <- 2
 a[3] <- 1
 
-DECLARE i AS INT
-DECLARE j AS INT
-DECLARE temp AS INT
-FOR i <- 0 TO 4
+DECLARE i : INT
+DECLARE j : INT
+DECLARE temp : INT
+FOR i <- 0 TO 3
     FOR j <- 0 TO i
         IF a[i] < a[j]
           THEN
@@ -17,8 +17,8 @@ FOR i <- 0 TO 4
         ENDIF
     ENDFOR
 ENDFOR
-
 OUTPUT a[0]
 OUTPUT a[1]
 OUTPUT a[2]
 OUTPUT a[3]
+

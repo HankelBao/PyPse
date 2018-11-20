@@ -26,7 +26,7 @@ class Item():
             value = convert_token_to_value(token)
         if token.data == "expression":
             self.item_type = ItemType.EXPRESSION
-            self.expression = Expression(token, self)
+            self.expression = Expression(token, self.scope_block)
             value = self.expression.get_value()
         if token.data == "key":
             self.item_type = ItemType.KEY

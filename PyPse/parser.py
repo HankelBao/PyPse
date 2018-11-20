@@ -4,6 +4,7 @@ pse_parser = Lark(r"""
     blocks: block+
     ?block: debug_block
         | declare_block
+        | type_block
         | assign_block
         | decision_block
         | output_block
@@ -19,6 +20,7 @@ pse_parser = Lark(r"""
     debug_block: "DEBUG"
 
     declare_block: "DECLARE" symbol ":" type
+    type_block: "TYPE" symbol blocks "ENDTYPE"
     assign_block: key "<-" expression
 
     output_block: "OUTPUT" expression
@@ -30,7 +32,7 @@ pse_parser = Lark(r"""
     decision_endif: "ENDIF"
 
     repeat_block: "REPEAT" blocks "UNTIL" expression
-    while_block: "WHILE" expression blocks "ENDWHILE"
+    while_block: "WHILE" expression "DO" blocks "ENDWHILE"
 
     for_block: "FOR" key "<-" for_start_exp "TO" for_end_exp blocks "ENDFOR"
     for_start_exp: expression
@@ -44,9 +46,13 @@ pse_parser = Lark(r"""
     return_block: "RETURN" expression
 
     call_procedure_block: "CALL" key "(" function_params ")"
+    function_call: key "(" function_params ")"
+    function_params: expression ("," expression)*
 
-    key: symbol child_symbol*
-    ?child_symbol : "." symbol
+    key: key_item child_key_item*
+    ?child_key_item: "." key_item
+    key_item: symbol  ("[" array_index "]")?
+    array_index: int
 
     expression: item operation*
     operation: operator item
@@ -62,19 +68,17 @@ pse_parser = Lark(r"""
         | operator_largerorequalto
         | operator_smallerthan
         | operator_smallerorequalto
-    operator_add: "+"
-    operator_minus: "-"
-    operator_multiple: "*"
-    operator_divide: "/"
-    operator_equal: "="
-    operator_largerthan: ">"
-    operator_largerorequalto: ">="
-    operator_smallerthan: "<"
-    operator_smallerorequalto: "<="
+        operator_add: "+"
+        operator_minus: "-"
+        operator_multiple: "*"
+        operator_divide: "/"
+        operator_equal: "="
+        operator_largerthan: ">"
+        operator_largerorequalto: ">="
+        operator_smallerthan: "<"
+        operator_smallerorequalto: "<="
 
     symbol : CNAME
-    function_call: key "(" function_params ")"
-    function_params: expression ("," expression)*
 
     value: int
         | real
@@ -83,12 +87,16 @@ pse_parser = Lark(r"""
         | type_real
         | type_string
         | type_bool
+        | type_array
         | type_custom
     type_int: "INT"
     type_real: "REAL"
     type_string: "STRING"
     type_bool: "BOOL"
-    type_custom: "CUSTOM"
+    type_array: "ARRAY" "[" type_array_start_index ".." type_array_end_index "]" "OF" type
+        type_array_start_index: int
+        type_array_end_index: int
+    type_custom: symbol
 
     string: ESCAPED_STRING
     int: [SIGNED_INT | INT]

@@ -35,15 +35,3 @@ class Symbols():
         for symbol in self.symbol_list:
             symbol.debug_output()
         DebugOutput.decrease_depth()
-
-
-def convert_token_to_symbol_name(token: Tree):
-    return str(token.children[0])
-
-
-def convert_token_to_symbol_names(token: Tree):
-    variable_names = []
-    for variable_token in token.children:
-        variable_name = convert_token_to_symbol_name(variable_token)
-        variable_names.append(variable_name)
-    return variable_names

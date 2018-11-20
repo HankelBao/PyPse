@@ -110,20 +110,4 @@ class OperatorSmallerThan(Operator):
     def debug_output():
         DebugOutput.output("<")
 
-
-def convert_token_to_operator(operator_token: Tree) -> Operator:
-    if operator_token == "operator_add":
-        return OperatorAdd
-    if operator_token == "operator_minus":
-        return OperatorMinus
-    if operator_token == "operator_multiple":
-        return OperatorMultiple
-    if operator_token == "operator_divide":
-        return OperatorDivide
-    if operator_token == "operator_equal":
-        return OperatorEqual
-    if operator_token == "operator_largerthan":
-        return OperatorLargerThan
-    if operator_token == "operator_smallerthan":
-        return OperatorSmallerThan
-    return Operator
+# from .converters import convert_token_to_operator

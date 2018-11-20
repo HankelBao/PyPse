@@ -1,10 +1,11 @@
 from lark import Tree
 from .debug import Debug, DebugOutput
-from .symbols import Symbol, Symbols, convert_token_to_symbol_name
-from .values import convert_token_to_valuetype, ValueType, Value
+from .symbols import Symbol, Symbols
+from .values import ValueType, Value
 from .expressions import Expression
 from .keys import Key
-from .converters import token_find_data, convert_param_tokens_to_symbols
+from copy import deepcopy
+from .converters import token_find_data, convert_param_tokens_to_param_items, convert_symbol_token_to_symbol_name, convert_token_to_valuetype, get_array_info_from_token, get_custom_type_name_from_type_token
 
 
 class Block():
@@ -32,8 +33,19 @@ class Block():
             childblocks.append(block)
         self.childblocks = childblocks
 
+    def search_symbol_by_name_recursively(self, symbol_name):
+        block = self
+        symbol = None
+        while not symbol:
+            if not block:
+                return None
+            symbol = block.symbols.search_by_name(symbol_name)
+            block = block.parentblock
+        return symbol
+
     def recursive_debug_output_childblocks(self):
-        self.recursive_debug_output_childblocks_with_attr(self.childblocks, "childblocks")
+        self.recursive_debug_output_childblocks_with_attr(
+            self.childblocks, "childblocks")
 
     def recursive_debug_output_childblocks_with_attr(self, childblocks, attr: str):
         DebugOutput.output_block_attr(attr)
@@ -65,10 +77,34 @@ class RootBlock(Block):
 
 class DeclareBlock(Block):
     def run(self, block_token: Tree):
+        # Name
         variable_name_token = token_find_data(block_token, "symbol")
-        variable_name = convert_token_to_symbol_name(variable_name_token)
-        value_type = convert_token_to_valuetype(token_find_data(block_token, "type"))
-        self.symbol = Symbol(variable_name, value_type)
+        variable_name = convert_symbol_token_to_symbol_name(
+            variable_name_token)
+
+        # Type
+        valuetype_token = token_find_data(block_token, "type")
+        valuetype = convert_token_to_valuetype(valuetype_token)
+        if valuetype == ValueType.CUSTOM_TYPE:
+            valuetype_name = get_custom_type_name_from_type_token(
+                valuetype_token)
+            valuetype_symbol = self.search_symbol_by_name_recursively(
+                valuetype_name)
+            valuetype = deepcopy(valuetype_symbol.value.value_in_python)
+
+        self.symbol = Symbol(variable_name, valuetype)
+
+        # Initiation
+        if valuetype == ValueType.ARRAY:
+            start_index, end_index, valuetype = get_array_info_from_token(
+                valuetype_token)
+            self.symbol.value.value_in_python = {}
+            for i in range(start_index, end_index+1):
+                self.symbol.value.value_in_python[i] = Value(valuetype)
+        if isinstance(valuetype, TypeBlock):
+            self.symbol.value.value_in_python = deepcopy(valuetype)
+
+        # Merge
         self.parentblock.symbols.append(self.symbol)
 
     def recursive_debug_output(self):
@@ -100,6 +136,32 @@ class AssignBlock(Block):
 
         self.key.debug_output()
         self.expression.debug_output()
+
+        DebugOutput.decrease_depth()
+
+
+class TypeBlock(Block):
+    def run(self, block_token: Tree):
+        symbol_token = token_find_data(block_token, "symbol")
+        childblocks = token_find_data(block_token, "blocks")
+        self.symbol_name = convert_symbol_token_to_symbol_name(symbol_token)
+
+        symbol = Symbol(self.symbol_name, ValueType.TYPE)
+        symbol.value.assign_value_in_python(self)
+        self.parentblock.symbols.append(symbol)
+
+        self.run_childblocks(childblocks)
+
+    def recursive_debug_output(self):
+        DebugOutput.output_block_title("type block")
+        DebugOutput.increase_depth()
+
+        DebugOutput.output_block_attr("symbol_name")
+        DebugOutput.increase_depth()
+        DebugOutput.output(self.symbol_name)
+        DebugOutput.decrease_depth()
+
+        self.recursive_debug_output_childblocks()
 
         DebugOutput.decrease_depth()
 
@@ -243,18 +305,24 @@ class FunctionBlock(Block):
         param_tokens = token_find_data(block_token, "function_block_params")
         function_return_type_token = token_find_data(block_token, "type")
 
-        function_name = convert_token_to_symbol_name(function_name_token)
+        self.function_name = convert_symbol_token_to_symbol_name(
+            function_name_token)
         function_return_type = \
             convert_token_to_valuetype(function_return_type_token)
 
-        self.param_symbols = convert_param_tokens_to_symbols(param_tokens)
-        for symbol in self.param_symbols:
+        self.param_symbols = []
+        param_items = convert_param_tokens_to_param_items(param_tokens)
+        for param_item in param_items:
+            symbol_name = param_item['param_name']
+            value_type = param_item['param_type']
+            symbol = Symbol(symbol_name, value_type)
+            self.param_symbols.append(symbol)
             self.symbols.append(symbol)
 
         self.return_value = Value(function_return_type)
         self.blocks_token = token_find_data(block_token, "blocks")
 
-        function_symbol = Symbol(function_name, ValueType.FUNCTION)
+        function_symbol = Symbol(self.function_name, ValueType.FUNCTION)
         function_symbol.value.assign_value_in_python(self)
         self.parentblock.symbols.append(function_symbol)
 
@@ -269,15 +337,33 @@ class FunctionBlock(Block):
 
     def recursive_debug_output(self):
         DebugOutput.output_block_title("function block")
+        DebugOutput.increase_depth()
+        DebugOutput.output_block_attr("name")
+        DebugOutput.output(self.function_name)
+
+        DebugOutput.output_block_attr("params")
+        DebugOutput.output(self.param_symbols)
+
+        DebugOutput.output_block_attr("return")
+        self.return_value.debug_output()
+        DebugOutput.decrease_depth()
 
 
 class ReturnBlock(Block):
     def run(self, block_token: Tree):
         return_exp_token = token_find_data(block_token, "expression")
         self.return_exp = Expression(return_exp_token, self)
-        # Error may appear here when the parent block is not a function
-        # TODO: Fixme
-        self.parentblock.return_value.assign_value(self.return_exp.get_value())
+
+        def recursive_search_parent_function_block(current_block):
+            block = current_block
+            while not isinstance(block, FunctionBlock):
+                if not block:
+                    return None
+                block = block.parentblock
+            return block
+        parent_function_block = recursive_search_parent_function_block(self)
+        parent_function_block.return_value.assign_value(
+            self.return_exp.get_value())
 
     def recursive_debug_output(self):
         DebugOutput.output_block_title("return block")
@@ -289,11 +375,19 @@ class ReturnBlock(Block):
 class ProcedureBlock(Block):
     def run(self, block_token: Tree):
         procedure_name_token = token_find_data(block_token, "symbol")
-        procedure_name = convert_token_to_symbol_name(procedure_name_token)
+        procedure_name = convert_symbol_token_to_symbol_name(
+            procedure_name_token)
         param_tokens = token_find_data(block_token, "function_block_params")
-        self.param_symbols = convert_param_tokens_to_symbols(param_tokens)
-        for symbol in self.param_symbols:
+
+        self.param_symbols = []
+        param_items = convert_param_tokens_to_param_items(param_tokens)
+        for param_item in param_items:
+            symbol_name = param_item['param_name']
+            value_type = param_item['param_type']
+            symbol = Symbol(symbol_name, value_type)
+            self.param_symbols.append(symbol)
             self.symbols.append(symbol)
+
         self.blocks_token = token_find_data(block_token, "blocks")
 
         procedure_symbol = Symbol(procedure_name, ValueType.PROCEDURE)
@@ -328,15 +422,22 @@ class CallProcedureBlock(Block):
                 param_exp = Expression(expression_token, self)
                 param_exps.append(param_exp)
 
-        procedure_key = Key(procedure_name_token, self)
-        procedure = procedure_key.get_value()
+        self.procedure_key = Key(procedure_name_token, self)
+        procedure = self.procedure_key.get_value()
         procedure_block = procedure.value_in_python
         procedure_block.call(param_exps)
+
+    def recursive_debug_output(self):
+        DebugOutput.output_block_title("call block")
+        DebugOutput.increase_depth()
+        self.procedure_key.debug_output()
+        DebugOutput.decrease_depth()
 
 
 blocks = {
     "debug_block": DebugBlock,
     "declare_block": DeclareBlock,
+    "type_block": TypeBlock,
     "assign_block": AssignBlock,
     "output_block": OutputBlock,
     "input_block": InputBlock,

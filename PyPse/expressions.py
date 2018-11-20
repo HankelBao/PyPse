@@ -1,11 +1,11 @@
 from lark import Tree
 from enum import Enum, auto
 from copy import deepcopy
-from .values import Value, ValueType, convert_token_to_value
-from .operators import Operator, convert_token_to_operator
+from .values import Value, ValueType
+from .operators import Operator
 from .debug import DebugOutput
 from .keys import Key
-from .converters import token_find_data
+from .converters import token_find_data, convert_token_to_operator, convert_token_to_valuetype, convert_token_to_value
 
 
 class ItemType(Enum):

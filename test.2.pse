@@ -6,7 +6,7 @@ TOS <- 0
 
 WHILE TOS < 5 DO
     INPUT NewItem
-    MyStack[TOS] <- 1
+    MyStack[TOS] <- NewItem
 
     FOR i <- 0 TO 4
         OUTPUT i

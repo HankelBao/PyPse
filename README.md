@@ -1,4 +1,4 @@
-# [P](#)y[P](#)se - A Pseudocode Compiler in Python
+# [Py](#)thon [Pse](#)udocode Compiler
 
 ## Introduction
 

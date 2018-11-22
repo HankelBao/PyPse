@@ -11,7 +11,7 @@ Features:
 * Available in Windows and Linux
 * Continuously developing
 
-I am senior high students learning A2 Computer Science currently, and I am new to comiplers. The project is still under heavy developing. Feel free to raise issues or contribute.
+I am senior high students learning A2 Computer Science currently, and I am new to compilers. The project is still under heavy developing. Feel free to raise issues or contribute.
 
 ![demo_screenshot](screenshots/demo_screenshot.png)
 
@@ -56,6 +56,33 @@ Remember, you should always use `pypse.bin` for linux and `pypse.exe` for window
 Pseudocode File ends in **.pse**, so you should create a file with such extension for execution.
 
 Write your own pseudocode and execute it!
+
+## Progress
+
+- [ ] Warnings and Errors
+- [ ] Full types support
+    - [x] INT
+    - [ ] REAL
+    - [ ] STRING
+    - [ ] BOOL
+- [x] Declaration
+- [x] Arrays
+- [ ] Dicts
+- [x] Custom Types
+- [x] Debug Block
+- [x] Assign
+- [x] Output
+- [x] Input
+- [x] IF...
+- [x] WHILE...
+- [x] REPEAT...
+- [x] FOR...
+- [x] Procedure...
+- [x] CALL...
+- [x] FUNCTION...
+- [x] RETURN...
+- [ ] CASE...
+- [ ] More Features...
 
 
 ## Contributing

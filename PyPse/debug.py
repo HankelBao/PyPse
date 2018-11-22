@@ -1,3 +1,6 @@
+"""
+Built for DebugBlock
+"""
 class Debug():
     RootBlock = None
 

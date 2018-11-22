@@ -1,6 +1,7 @@
 from lark import Tree
 from enum import Enum, auto
 from .debug import DebugOutput
+from .output import Warnings
 
 
 class ValueType(Enum):
@@ -13,6 +14,12 @@ class ValueType(Enum):
     FUNCTION = auto()
     PROCEDURE = auto()
     TYPE = auto()
+
+    """
+    Temporary Notation.
+    Shouldn't be used anywhere else except for DeclareBlock
+    It won't appear after the value is initiated.
+    """
     CUSTOM_TYPE = auto()
 
 
@@ -25,7 +32,8 @@ class Value():
         self.value_in_python = value_in_python
 
     def assign_value(self, value):
-        # if self.value_type == value.value_type:
+        if self.value_type != value.value_type:
+            Warnings.output(f"assigning unmatched type from {self.value_type} to {value.value_type}")
         self.value_in_python = value.value_in_python
         self.value_type = value.value_type
 

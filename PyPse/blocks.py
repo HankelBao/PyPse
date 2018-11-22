@@ -1,10 +1,11 @@
 from lark import Tree
+from copy import deepcopy
 from .debug import Debug, DebugOutput
+from .output import register_current_block
 from .symbols import Symbol, Symbols
 from .values import ValueType, Value
 from .expressions import Expression
 from .keys import Key
-from copy import deepcopy
 from .converters import token_find_data, convert_param_tokens_to_param_items, convert_symbol_token_to_symbol_name, convert_token_to_valuetype, get_array_info_from_token, get_custom_type_name_from_type_token
 
 
@@ -21,17 +22,16 @@ class Block():
         DebugOutput.output_block_title("anonymous block")
 
     def run_childblocks(self, blocks_token):
-        childblocks = []
+        self.childblocks = []
         for block_token in blocks_token.children:
             if block_token.data in blocks:
                 MatchedBlock = blocks[block_token.data]
             else:
                 MatchedBlock = Block
             block = MatchedBlock(self)
+            register_current_block(block, block_token)
             block.run(block_token)
-            # self.childblocks.append(block)
-            childblocks.append(block)
-        self.childblocks = childblocks
+            self.childblocks.append(block)
 
     def search_symbol_by_name_recursively(self, symbol_name):
         block = self
@@ -53,6 +53,9 @@ class Block():
         for block in childblocks:
             block.recursive_debug_output()
         DebugOutput.decrease_depth()
+
+    def __repr__(self):
+        return type(self).__name__
 
 
 class DebugBlock(Block):

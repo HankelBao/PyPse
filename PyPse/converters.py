@@ -1,6 +1,7 @@
 from lark import Tree
 from .values import ValueType, Value
 from .operators import Operator, OperatorAdd, OperatorMinus, OperatorMultiple, OperatorDivide, OperatorEqual, OperatorLargerThan, OperatorSmallerThan
+from . import blocks
 
 
 def token_find_data(token: Tree, name: str):
@@ -61,6 +62,30 @@ def convert_token_to_valuetype(type_token) -> ValueType:
     return ValueType.ANONYMOUS
 
 
+def get_valuetype_from_value_token(value_token: Tree) -> ValueType:
+    valuetype_str = value_token.children[0].data
+    if valuetype_str == "int":
+        return ValueType.INT
+    if valuetype_str == "real":
+        return ValueType.REAL
+    if valuetype_str == "string":
+        return ValueType.STRING
+    if valuetype_str == "bool":
+        return ValueType.BOOL
+    return ValueType.ANONYMOUS
+
+
+def convert_value_in_python_to_valuetpye(value_in_python) -> ValueType:
+    if type(value_in_python) == str:
+        return ValueType.STRING
+    if type(value_in_python) == int:
+        return ValueType.INT
+    if type(value_in_python) == float:
+        return ValueType.REAL
+    if isinstance(value_in_python, blocks.TypeBlock):
+        return value_in_python
+
+
 def get_custom_type_name_from_type_token(type_token: Tree) -> str:
     symbol_token = type_token.children[0].children[0]
     symbol_name = convert_symbol_token_to_symbol_name(symbol_token)
@@ -80,19 +105,6 @@ def get_array_info_from_token(type_token: Tree) -> (int, int, ValueType):
     valuetype_token = token_find_data(type_array_token, "type")
     valuetype = convert_token_to_valuetype(valuetype_token)
     return array_start_index, array_end_index, valuetype
-
-
-def get_valuetype_from_value_token(value_token: Tree) -> ValueType:
-    valuetype_str = value_token.children[0].data
-    if valuetype_str == "int":
-        return ValueType.INT
-    if valuetype_str == "real":
-        return ValueType.REAL
-    if valuetype_str == "string":
-        return ValueType.STRING
-    if valuetype_str == "bool":
-        return ValueType.BOOL
-    return ValueType.ANONYMOUS
 
 
 def convert_token_to_value(value_token: Tree) -> ValueType:

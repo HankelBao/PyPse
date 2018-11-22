@@ -113,7 +113,7 @@ pse_parser = Lark(r"""
     %import common.NEWLINE
     %import common.WS
     %ignore WS
-    """, start='blocks')
+    """, start='blocks', debug=True, propagate_positions=True)
 
 
 def parse_file_to_token(file):

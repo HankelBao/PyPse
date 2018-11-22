@@ -11,7 +11,7 @@ Features:
 * Available in Windows and Linux
 * Continuously developing
 
-I am senior high students learning A2 currently, and I am new to comiplers. The project is still under heavy developing. Feel free to raise issues or contribute.
+I am senior high students learning A2 Computer Science currently, and I am new to comiplers. The project is still under heavy developing. Feel free to raise issues or contribute.
 
 ![demo_screenshot](screenshots/demo_screenshot.png)
 
@@ -70,7 +70,7 @@ For example
 .\pypse.exe test.5.pse --debug
 ```
 
-Feel free to report issues and make contributions.
+Feel free to report issues and make contributions
 
 ## Promote
 

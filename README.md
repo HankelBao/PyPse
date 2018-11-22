@@ -2,16 +2,16 @@
 
 ## Introduction
 
-PsPse is a full-featured interpreted compiler for teaching purposes.
+PsPse is a interpreted compiler for teaching purposes.
 
 Features:
 
-* Compile all codes in AS-Level Computer Science Syllabus
+* Compile codes in AS-Level Computer Science Syllabus
 * Portable with no environemt requirements
 * Available in Windows and Linux
-* Continuously developing based on my interest
+* Continuously developing
 
-I am new to comiplers, and the project is still under heavy developing. Feel free to raise issues or contribute.
+I am senior high students learning A2 currently, and I am new to comiplers. The project is still under heavy developing. Feel free to raise issues or contribute.
 
 ![demo_screenshot](screenshots/demo_screenshot.png)
 
@@ -57,6 +57,11 @@ Pseudocode File ends in **.pse**, so you should create a file with such extensio
 
 Write your own pseudocode and execute it!
 
+
+## Contributing
+
+The compiler is currently **not** fully functioning and there may be some bugs.
+
 If you want to see the debug info for the compiler, call the command with *--debug*
 
 For example
@@ -65,10 +70,10 @@ For example
 .\pypse.exe test.5.pse --debug
 ```
 
-## Contributing
+Feel free to report issues and make contributions.
 
-The compiler is currently **not** fully functioning and there may be a lot of bugs.
+## Promote
 
-Feel free to report issues and spread it around your classes if you also find the need for such a compiler.
+Spread it around your classes if you also find the need for such a compiler!
 
-Thans for your support.
+Thanks for your support.

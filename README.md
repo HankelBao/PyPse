@@ -11,7 +11,7 @@ Features:
 * Available in Windows and Linux
 * Continuously developing
 
-I am senior high students learning A2 Computer Science currently, and I am new to compilers. The project is still under heavy developing. Feel free to raise issues or contribute.
+I am a senior high student learning A2 Computer Science currently, and I am new to compilers. The project is still under heavy developing. Feel free to raise issues or contribute.
 
 ![demo_screenshot](screenshots/demo_screenshot.png)
 

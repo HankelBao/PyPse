@@ -32,15 +32,15 @@ PyDictObject *moduledict___main__;
 
 /* The module constants used, if any. */
 extern PyObject *const_str_plain___file__;
-extern PyObject *const_str_plain_PyPse;
+static PyObject *const_str_plain_PyPse;
 static PyObject *const_str_digest_271128240eb538b6a07e75863028f6f7;
 extern PyObject *const_str_plain___cached__;
-extern PyObject *const_str_plain_launch;
+static PyObject *const_str_plain_launch;
 extern PyObject *const_str_plain___main__;
 extern PyObject *const_int_0;
 static PyObject *const_str_plain___annotations__;
 static PyObject *const_str_angle_module;
-extern PyObject *const_tuple_str_plain_launch_tuple;
+static PyObject *const_tuple_str_plain_launch_tuple;
 extern PyObject *const_tuple_empty;
 extern PyObject *const_str_plain___doc__;
 extern PyObject *const_str_plain_site;
@@ -50,9 +50,13 @@ static bool constants_created = false;
 
 static void createModuleConstants( void )
 {
-    const_str_digest_271128240eb538b6a07e75863028f6f7 = UNSTREAM_STRING( &constant_bin[ 8353 ], 43, 0 );
-    const_str_plain___annotations__ = UNSTREAM_STRING( &constant_bin[ 8396 ], 15, 1 );
-    const_str_angle_module = UNSTREAM_STRING( &constant_bin[ 8411 ], 8, 0 );
+    const_str_plain_PyPse = UNSTREAM_STRING( &constant_bin[ 0 ], 5, 1 );
+    const_str_digest_271128240eb538b6a07e75863028f6f7 = UNSTREAM_STRING( &constant_bin[ 5 ], 43, 0 );
+    const_str_plain_launch = UNSTREAM_STRING( &constant_bin[ 48 ], 6, 1 );
+    const_str_plain___annotations__ = UNSTREAM_STRING( &constant_bin[ 54 ], 15, 1 );
+    const_str_angle_module = UNSTREAM_STRING( &constant_bin[ 69 ], 8, 0 );
+    const_tuple_str_plain_launch_tuple = PyTuple_New( 1 );
+    PyTuple_SET_ITEM( const_tuple_str_plain_launch_tuple, 0, const_str_plain_launch ); Py_INCREF( const_str_plain_launch );
 
     constants_created = true;
 }

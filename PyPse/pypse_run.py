@@ -8,7 +8,6 @@ from .output import Messages
 def pypse_run(file, DEBUG=False, WARNING=True):
     global WARNING_MODE
     WARNING_MODE = WARNING
-    print(WARNING_MODE)
 
     Messages.loaded_file(file.name)
 

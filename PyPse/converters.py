@@ -119,8 +119,7 @@ def convert_token_to_value(value_token: Tree) -> ValueType:
         value_type = ValueType.REAL
         value_in_python = float(value_str)
     if valuetype_str == "string":
-        value_type = ValueType.STRING
-        value_in_python = str(value_str)
+        value_in_python = str(value_str)[1:-1]
     value = Value(value_type)
     value.assign_value_in_python(value_in_python)
     return value

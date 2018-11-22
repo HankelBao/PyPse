@@ -47,7 +47,6 @@ class Messages():
 class Warnings():
     def output(content: str):
         global current_block, current_line_num_start, current_line_num_end, WARNING_MODE
-        print(WARNING_MODE)
         if WARNING_MODE:
             if current_line_num_end:
                 print(f"line {current_line_num_start}~{current_line_num_end} {str(current_block)}: {content}")

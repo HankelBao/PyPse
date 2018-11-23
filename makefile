@@ -1,11 +1,8 @@
 run:
-	python3 main.py
-
-test:
-	nuitka3 pypse.py
+	python3 test.py
 
 build:
-	nuitka3 pypse.py --follow-imports
+	nuitka3 pypse.py -o bin/pypse --follow-imports
 
 clean:
-	rm -rf pypse.bin pypse.build/
+	rm -rf pypse.build/

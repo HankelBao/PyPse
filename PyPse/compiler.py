@@ -1,3 +1,0 @@
-VERSION = "0.0.x"
-DEBUG = False
-WARNING_MODE = True

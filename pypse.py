@@ -1,3 +1,3 @@
-from PyPse import launch
+from pypse import shell
 
-launch()
+shell.launch()

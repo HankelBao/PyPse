@@ -1,3 +1,0 @@
-DECLARE a : INT
-a <- "asdfjkl"
-OUTPUT "asdfjkl"

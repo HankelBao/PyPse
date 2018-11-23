@@ -30,21 +30,21 @@ As a result, there is a clear need to write such compiler, also as a project of 
 First, Clone the repo in terminal:
 
 ```
-git clone https://github.com/HankelBao/PyPseTest
+git clone https://github.com/HankelBao/PyPse
 ```
 
-Now, you will have the PyPseTest folder in your current path. CD to it and you will have `pypse.bin` and `pypse.exe` under the folder.
+Now, you will have the PyPse folder in your current path. CD to PyPse/bin/ and you will have `pypse.bin` and `pypse.exe` under the folder.
 
 If you are using Windows, 
 
 ```
-.\pypse.exe test.5.pse
+.\pypse.exe ..\test\test.5.pse
 ```
 
 If you are using Linux, 
 
 ```
-.\pypse.bin test.5.pse
+.\pypse.bin ..\test\test.5.pse
 ```
 
 If you see the *Hello World!* message showing up just like the demo, you are ready to go!
@@ -94,7 +94,7 @@ If you want to see the debug info for the compiler, call the command with *--deb
 For example
 
 ```
-.\pypse.exe test.5.pse --debug
+.\pypse.exe ..\test\test.5.pse --debug
 ```
 
 Feel free to report issues and make contributions

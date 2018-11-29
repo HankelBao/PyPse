@@ -101,8 +101,6 @@ pse_parser = Lark(r"""
     string: ESCAPED_STRING
     int: [SIGNED_INT | INT]
     real: [SIGNED_FLOAT | FLOAT]
-    bool: "TRUE" -> true
-        | "FALSE" -> false
 
     %import common.CNAME
     %import common.ESCAPED_STRING

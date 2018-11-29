@@ -62,9 +62,10 @@ Write your own pseudocode and execute it!
 - [ ] Warnings and Errors
 - [ ] Full types support
     - [x] INT
-    - [ ] REAL
-    - [ ] STRING
-    - [ ] BOOL
+    - [x] REAL
+    - [x] STRING
+    - [x] BOOL
+    - [ ] More...
 - [x] Declaration
 - [x] Arrays
 - [ ] Dicts

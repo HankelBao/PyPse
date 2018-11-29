@@ -12,15 +12,18 @@ def pypse_run(file, DEBUG=False, WARNING=True):
     Messages.loaded_file(file.name)
 
     token_tree = parse_file_to_token(file)
-    root_block = RootBlock(None)
+    if DEBUG:
+        DebugOutput.output("Tokens:")
+        DebugOutput.output(token_tree.pretty())
 
+
+    root_block = RootBlock(None)
     Debug.register_root_block(root_block)
+    root_block.init_sys_symbols()
     root_block.run(token_tree)
 
     if DEBUG:
         DebugOutput.output("")
-        DebugOutput.output("Tokens:")
-        DebugOutput.output(token_tree.pretty())
         DebugOutput.output("Structures:")
         root_block.recursive_debug_output()
 

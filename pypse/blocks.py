@@ -70,6 +70,14 @@ class RootBlock(Block):
     def run(self, block_token: Tree):
         self.run_childblocks(block_token)
 
+    def init_sys_symbols(self):
+        symbol_true = Symbol("TRUE", ValueType.BOOL)
+        symbol_true.value.assign_value_in_python(True)
+        symbol_false = Symbol("FALSE", ValueType.BOOL)
+        symbol_false.value.assign_value_in_python(False)
+        self.symbols.append(symbol_true)
+        self.symbols.append(symbol_false)
+
     def recursive_debug_output(self):
         DebugOutput.output_block_title("root block")
         DebugOutput.increase_depth()

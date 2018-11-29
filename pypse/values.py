@@ -33,7 +33,7 @@ class Value():
 
     def assign_value(self, value):
         if self.value_type != value.value_type:
-            Warnings.output(f"assigning unmatched type from {self.value_type} to {value.value_type}")
+            Warnings.output(f"assigning unmatched type from {value.value_type} to {self.value_type}")
         self.value_in_python = value.value_in_python
         self.value_type = value.value_type
 

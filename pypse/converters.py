@@ -70,8 +70,6 @@ def get_valuetype_from_value_token(value_token: Tree) -> ValueType:
         return ValueType.REAL
     if valuetype_str == "string":
         return ValueType.STRING
-    if valuetype_str == "bool":
-        return ValueType.BOOL
     return ValueType.ANONYMOUS
 
 
@@ -110,15 +108,17 @@ def get_array_info_from_token(type_token: Tree) -> (int, int, ValueType):
 def convert_token_to_value(value_token: Tree) -> ValueType:
     valuetype_str = value_token.children[0].data
     value_type = None
-    value_str = value_token.children[0].children[0]
     value_in_python = None
     if valuetype_str == "int":
         value_type = ValueType.INT
+        value_str = value_token.children[0].children[0]
         value_in_python = int(value_str)
     if valuetype_str == "real":
         value_type = ValueType.REAL
+        value_str = value_token.children[0].children[0]
         value_in_python = float(value_str)
     if valuetype_str == "string":
+        value_type = ValueType.STRING
         value_in_python = str(value_str)[1:-1]
     value = Value(value_type)
     value.assign_value_in_python(value_in_python)

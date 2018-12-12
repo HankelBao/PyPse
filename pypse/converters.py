@@ -4,10 +4,18 @@ from .operators import Operator, OperatorAdd, OperatorMinus, OperatorMultiple, O
 from . import blocks
 
 
-def token_find_data(token: Tree, name: str):
+def token_find_data(token: Tree, name: str) -> Tree:
     for child_token in token.children:
         if child_token.data == name:
             return child_token
+
+
+def token_find_multiple_data(token: Tree, name: str) -> list:
+    matched_child_token = []
+    for child_token in token.children:
+        if child_token.data == name:
+            matched_child_token.append(child_token)
+    return matched_child_token
 
 
 def convert_param_tokens_to_param_items(params_token: Tree):

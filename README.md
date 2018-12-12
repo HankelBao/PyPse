@@ -11,7 +11,7 @@ Features:
 * Available in Windows and Linux
 * Continuously developing
 
-I am a senior high student learning A2 Computer Science currently, and I am new to compilers. The project is still under heavy developing. Feel free to raise issues or contribute.
+I am a senior high student learning A2 Computer Science currently, and I am new to compilers. Feel free to raise issues or contribute.
 
 ![demo_screenshot](screenshots/demo_screenshot.png)
 
@@ -82,13 +82,11 @@ Write your own pseudocode and execute it!
 - [x] CALL...
 - [x] FUNCTION...
 - [x] RETURN...
-- [ ] CASE...
+- [x] CASE...
 - [ ] More Features...
 
 
 ## Contributing
-
-The compiler is currently **not** fully functioning and there may be some bugs.
 
 If you want to see the debug info for the compiler, call the command with *--debug*
 

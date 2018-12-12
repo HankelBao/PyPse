@@ -6,7 +6,7 @@ from .symbols import Symbol, Symbols
 from .values import ValueType, Value
 from .expressions import Expression
 from .keys import Key
-from .converters import token_find_data, convert_param_tokens_to_param_items, convert_symbol_token_to_symbol_name, convert_token_to_valuetype, get_array_info_from_token, get_custom_type_name_from_type_token
+from .converters import token_find_data, convert_param_tokens_to_param_items, convert_symbol_token_to_symbol_name, convert_token_to_valuetype, get_array_info_from_token, get_custom_type_name_from_type_token, token_find_multiple_data
 
 
 class Block():
@@ -250,6 +250,27 @@ class DecisionBlock(Block):
         DebugOutput.decrease_depth()
 
 
+class CaseBlock(Block):
+    def run(self, block_token: Tree):
+        case_key_token = token_find_data(block_token, "key")
+        case_key = Key(case_key_token, self)
+        case_key_value = case_key.get_value().value_in_python
+        cases = {}
+        case_otherwise = None
+        for child_token in token_find_multiple_data(block_token, "case"):
+            case_exp_token = token_find_data(child_token, "expression")
+            if case_exp_token:
+                case_exp = Expression(case_exp_token, self)
+                if case_exp.get_value().value_in_python == case_key_value:
+                    blocks_token = token_find_data(child_token, "blocks")
+                    self.run_childblocks(blocks_token)
+                    return
+            else:
+                case_otherwise = token_find_data(child_token, "blocks")
+        if case_otherwise:
+            self.run_childblocks(case_otherwise)
+
+
 class RepeatBlock(Block):
     def run(self, block_token: Tree):
         blocks_token = token_find_data(block_token, "blocks")
@@ -460,4 +481,5 @@ blocks = {
     "call_procedure_block": CallProcedureBlock,
     "function_block": FunctionBlock,
     "return_block": ReturnBlock,
+    "case_block": CaseBlock,
 }

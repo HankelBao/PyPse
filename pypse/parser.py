@@ -7,6 +7,7 @@ pse_parser = Lark(r"""
         | type_block
         | assign_block
         | decision_block
+        | case_block
         | output_block
         | input_block
         | repeat_block
@@ -30,6 +31,9 @@ pse_parser = Lark(r"""
     decision_if_branch: "IF" expression "THEN" blocks
     decision_else_branch: "ELSE" blocks
     decision_endif: "ENDIF"
+
+    case_block: "CASE" key case+ "ENDCASE"
+    case: expression ":" blocks | "OTHERWISE" blocks
 
     repeat_block: "REPEAT" blocks "UNTIL" expression
     while_block: "WHILE" expression "DO" blocks "ENDWHILE"

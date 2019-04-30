@@ -11,3 +11,4 @@ ENDTYPE
 DECLARE test_type : type_b
 test_type.child_b[1].child_b[8] <- 1
 OUTPUT test_type.child_b[1].child_b[8]
+

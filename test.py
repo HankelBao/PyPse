@@ -1,5 +1,4 @@
-from pypse import pypse_run
+from pypse import run
 
-
-file = open("test/test.pse", "r")
-pypse_run(file, DEBUG=True, WARNING=False)
+f = open("./test/test.1.pse", "r")
+run(f)

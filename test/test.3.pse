@@ -18,3 +18,4 @@ ENDPROCEDURE
 OUTPUT add(1, 2)
 OUTPUT larger(1, 10)
 CALL output(3444, 4333)
+
